@@ -17,77 +17,54 @@ passport.deserializeUser(function(id, done) {
 });
 
 
-userRouter.post('/register', (req, res, next) => {
-  const {username, password} = req.body
+userRouter.post('/register', async (req, res, next) => {
+  console.log(req.body);
+  const user= await new User({username : username});
 
-  User.register({username: username}, password, function(err, user) {
+  User.register(user, password, function(err, user) {
     if(err){
       res.status(500).json({
           err: true,
           message: "Interval server error"
       })
     }else{
-      passport.authenticate("local")(req, res, function(){
-        console.log(user);
-      })
       res.status(200).json({
         err: false,
-        message: user
+        message: 'User registered successfully'
       })
     }
     next()
   })
 })
 
-userRouter.post('/login', (req, res, next) => {
-   console.log('yo');
+userRouter.post('/login', async (req, res) => {
     const user = new User({
       username: req.body.username,
       password: req.body.password
     })
-    req.login(user, (err) => {
-      if(err) {
+    req.login(user, function(err){
+      if(err){
         res.status(500).json({
           err: true,
-          message: "Interval server error"
-      })
-      console.log(err);
-      } else {
-        passport.authenticate("local", (req, res) => {
-          console.log(user);
+          message: 'Server error, Try again later.'
         })
-        res.status(200).json({
-          err: false,
-          message: user
+      } else{
+        passport.authenticate('local')(req, res, function(){
+          res.status(200).json({
+            err: false,
+            message: user
+          })
         })
       }
     })
-})
+  })
+        
+      
 
 userRouter.get('/logout', function(req, res) {
   req.logout();
   res.redirect('/');
 })
 
-module.exports = userRouter
-
-
-
-// userRouter.post('/register', (req, res, next) => {
-//   const {username, password} = req.body
-
-//   User.register({username: username}, password, function(err, user) {
-//     if(err){
-//       res.status(500).json({
-//           err: true,
-//           message: "Interval server error"
-//       })
-//     }else{
-//       res.status(200).json({
-//         err: false,
-//         message: user
-//       })
-//     }
-//     next()
-//   })
-// })
+module.exports = userRouter;
+    

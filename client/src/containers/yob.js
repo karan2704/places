@@ -1,9 +1,11 @@
-import React from 'react'
+import React, {useState, useContext} from 'react'
+import { AuthContext } from '../context/authContext'
 
-function Yob() {
+function Yob() { 
+    const {user, setUser} = useContext(AuthContext)
     return (
         <div>
-            Yob!
+            Yob! {JSON.stringify(user)}
         </div>
     )
 }
