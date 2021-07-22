@@ -1,8 +1,8 @@
 import React, {useState, useContext} from 'react'
 import { AuthContext } from '../context/authContext'
 
-function Yob() { 
-    const {user, setUser} = useContext(AuthContext)
+function Home() { 
+    const {user} = useContext(AuthContext)
     return (
         <div>
             Yob! {JSON.stringify(user)}
@@ -10,4 +10,4 @@ function Yob() {
     )
 }
 
-export default Yob
+export default Home

@@ -1,7 +1,7 @@
 import React, {useState, useMemo} from 'react'
 import Auth from './containers/auth'
 import './App.css';
-import Yob from './containers/yob'
+import Home from './containers/home'
 import { AuthContext } from './context/authContext'
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
 
   return (
     <AuthContext.Provider value={providerValue} >
-    <Yob />
+    <Home />
     <Auth />
     </AuthContext.Provider>
   );
