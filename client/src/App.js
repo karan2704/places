@@ -1,4 +1,4 @@
-import {useState, useCallback, createContext} from 'react'
+import {useState, useContext} from 'react'
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,42 +9,16 @@ import {
 import Auth from './containers/auth'
 import './App.css';
 import Home from './containers/home'
-import { AuthContext } from './context/authContext'
+import AuthContext from './context/authContext'
 
-export const authContext = createContext({
-  authenticated: true,
-  userId: '',
-  username: '',
-  login: () => {},
-  logout: () => {}
-});
 
 function App() {
 
-  // const [user, setUser] = useState(null)
-  // const providerValue = useMemo(() => ({user, setUser}), [user, setUser])
-
-  const [authenticated, setAuthenticated] = useState(false)
-  const [userId, setUserId] = useState('')
-  const [username, setUsername] = useState('')
-  
-
-  const login = useCallback((uid, name) => {
-    console.log(uid);
-    setAuthenticated(true)
-    setUserId(uid)
-    setUsername(name)
-  }, [userId, authenticated, username])
-
-  const logout = useCallback(() => {
-    setAuthenticated(false)
-    setUserId(null)
-    setUsername(null)
-  }, [])
-
+    
+  const {isAuthenticated} = useContext(AuthContext)
   let routes
 
-  if(authenticated){
+  if(!isAuthenticated){
     routes = (
       <Switch>
         <Route path="/:uid/places" exact component={withRouter(Home)} />
@@ -61,12 +35,9 @@ function App() {
     )}
 
   return (
-    <AuthContext.Provider
-    value = {{authenticated: authenticated, userId: userId, username: username, login: login, logout: logout}} >
     <Router>
       {routes}
     </Router>
-    </AuthContext.Provider>
   );
 }
 

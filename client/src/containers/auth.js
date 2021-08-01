@@ -1,14 +1,16 @@
 import React, {useState, useContext} from 'react'
+import {useHistory} from 'react-router-dom'
 import axios from 'axios'
 
-import { AuthContext } from '../context/authContext'
-
+import AuthContext from '../context/authContext'
 import './auth.css'
 
-function Auth() {
+function Auth(props) {
 
-    let {user, setUser} = useContext(AuthContext)
+    // let {user, setUser} = useContext(AuthContext)
     
+    const auth = useContext(AuthContext)
+    const history = useHistory()
     const [registered, setRegistered] = useState(false)
 
     const [input, setInput] = useState({ 
@@ -41,6 +43,7 @@ function Auth() {
                 username: '',
                 password: ''
             })
+            console.log('User registered')
         })
         .catch((err) => {
             console.log(err);
@@ -62,11 +65,9 @@ function Auth() {
         })
         .then((response) => {
             console.log(response.data.message);
-            setUser({
-                id: response.data.message._id,
-                username: response.data.message.username,
-                isAuthenticated: true
-            })
+            const uid = response.data.message.uid
+            auth.login(uid)
+            history.push(`/${uid}/places`)
         })
         .catch((err) => {
             console.log(err);
